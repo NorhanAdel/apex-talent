@@ -7,7 +7,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Menu, X, Sun, Moon, Globe, ChevronDown } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
-import useTranslate from "../hooks/useTranslate";
+
+interface NavbarProps {
+  lang: string;
+  setLang: React.Dispatch<React.SetStateAction<string>>;
+}
 
 const navLinks = [
   { key: "home", href: "/" },
@@ -16,35 +20,40 @@ const navLinks = [
   { key: "about", href: "/about" },
   { key: "blogs", href: "/blogs" },
   { key: "events", href: "/events" },
-  { key: "profile", href: "/profile" }
+  { key: "profile", href: "/profile" },
 ];
 
 const languages = [
   { code: "en", label: "English" },
   { code: "ar", label: "Arabic" },
-  { code: "pt", label: "Portuguese" }
+  { code: "pt", label: "Portuguese" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ lang, setLang }: NavbarProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
 
   const { theme, toggleTheme } = useTheme();
-  const { t, lang, changeLang } = useTranslate();
+
+  const changeLang = (code: string) => {
+    setLang(code);
+    localStorage.setItem("lang", code);
+    document.documentElement.lang = code;
+    document.documentElement.dir = code === "ar" ? "rtl" : "ltr";
+    setLangOpen(false);
+  };
 
   return (
     <nav className="fixed w-full z-50 backdrop-blur-md border-b bg-[#020617]">
       <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
-
-       
+        {/* Logo */}
         <Link href="/">
-          <Image src="/logo.png" width={90} height={70} alt="logo"/>
+          <Image src="/logo.png" width={90} height={70} alt="logo" />
         </Link>
 
-        
+        {/* Desktop Menu */}
         <div className="hidden md:flex gap-8 items-center">
- 
           {navLinks.map((link) => {
             const active = pathname === link.href;
             return (
@@ -53,30 +62,26 @@ export default function Navbar() {
                   whileHover={{ scale: 1.1 }}
                   className={`text-lg ${active ? "text-[#F0B100]" : "text-white"}`}
                 >
-                  {t(link.key)}
+                  {link.key.toUpperCase()}
                 </motion.span>
 
                 {active && (
                   <motion.div
                     layoutId="underline"
-                    className="absolute left-0 -bottom-2 h-[3px] w-full bg-red-600 rounded-full"
+                    className="absolute left-0 -bottom-2 h-[3px] w-full bg-[#F0B100] rounded-full"
                   />
                 )}
               </Link>
             );
           })}
 
-       
+          {/* Theme Toggle */}
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={toggleTheme}
             className="p-2 rounded-full border border-[#f5b400]/30"
           >
-            {theme === "dark" ? (
-              <Sun className="text-[#F0B100]" size={20}/>
-            ) : (
-              <Moon className="text-[#F0B100]" size={20}/>
-            )}
+            {theme === "dark" ? <Sun className="text-[#F0B100]" size={20} /> : <Moon className="text-[#F0B100]" size={20} />}
           </motion.button>
 
           {/* Language Selector */}
@@ -87,24 +92,21 @@ export default function Navbar() {
             >
               <Globe size={16} className="text-[#F0B100]" />
               <span className="text-white">{lang.toUpperCase()}</span>
-              <ChevronDown size={16}/>
+              <ChevronDown size={16} />
             </button>
 
             <AnimatePresence>
               {langOpen && (
                 <motion.div
-                  initial={{opacity:0, y:-10}}
-                  animate={{opacity:1, y:0}}
-                  exit={{opacity:0, y:-10}}
-                  className="absolute right-0 mt-3 w-40 rounded-xl bg-[#14141c]"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute right-0 mt-3 w-40 rounded-xl bg-[#14141c] overflow-hidden"
                 >
                   {languages.map((language) => (
                     <button
                       key={language.code}
-                      onClick={() => {
-                        changeLang(language.code);
-                        setLangOpen(false);
-                      }}
+                      onClick={() => changeLang(language.code)}
                       className="block w-full text-left px-4 py-3 text-white hover:bg-[#333]"
                     >
                       {language.label}
@@ -116,15 +118,10 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Button */}
         <div className="md:hidden text-white">
-          {open ? (
-            <X onClick={() => setOpen(false)} />
-          ) : (
-            <Menu onClick={() => setOpen(true)} />
-          )}
+          {open ? <X onClick={() => setOpen(false)} /> : <Menu onClick={() => setOpen(true)} />}
         </div>
-
       </div>
 
       {/* Mobile Dropdown */}
@@ -143,7 +140,7 @@ export default function Navbar() {
                 className="block px-6 py-4 text-white border-b border-[#222]"
                 onClick={() => setOpen(false)}
               >
-                {t(link.key)}
+                {link.key.toUpperCase()}
               </Link>
             ))}
 
@@ -153,7 +150,7 @@ export default function Navbar() {
                 <button
                   key={language.code}
                   onClick={() => changeLang(language.code)}
-                  className={`block w-full text-left px-4 py-2 text-white hover:bg-[#333]`}
+                  className="block w-full text-left px-4 py-2 text-white hover:bg-[#333]"
                 >
                   {language.label}
                 </button>
