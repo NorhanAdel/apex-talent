@@ -23,10 +23,9 @@ export default function BlogSlider() {
   const prev = () => {
     setIndex((prev) => (prev - 1 < 0 ? cards.length - 3 : prev - 1));
   };
-
-  const goToDetails = (id) => {
-    router.push(`/blog/${id}`);
-  };
+const goToDetails = (id: number) => {
+  router.push(`/blog/${id}`);
+};
 
   return (
     <section className="bg-gray-900 py-16 px-4">
