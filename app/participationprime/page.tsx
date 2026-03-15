@@ -4,8 +4,7 @@ import { Camera, Video, Megaphone, Trophy } from "lucide-react";
 
 export default function ParticipationPrime() {
   return (
-    <div className="min-h-screen  bg-[#020b1c] flex flex-col items-center justify-center text-white py-38">
-
+    <div className="min-h-screen bg-[#020b1c] flex flex-col items-center justify-center text-white py-38">
       <h1 className="text-yellow-400 text-3xl font-bold mb-20">
         Participation Prime
       </h1>
@@ -47,22 +46,37 @@ export default function ParticipationPrime() {
   );
 }
 
-function PlanCard({ title, color, photos, videos, promo, price, gold }) {
+  
+function PlanCard({
+  title,
+  color,
+  photos,
+  videos,
+  promo,
+  price,
+  gold = false
+}: {
+  title: string;
+  color: string;
+  photos: string;
+  videos: string;
+  promo: string;
+  price: string;
+  gold?: boolean;
+}) {
   return (
     <div className={`relative w-[320px] rounded-xl bg-[#06122c] border border-[#1a2b55] p-6 shadow-xl
-    ${gold ? "shadow-yellow-500/30" : ""}`}>
+      ${gold ? "shadow-yellow-500/30" : ""}`}>
 
       {/* Ribbon */}
       <div className="absolute -top-5 left-0 flex items-center">
-
         <div className={`ribbon bg-gradient-to-r ${color} text-black font-bold px-7 py-2 flex items-center gap-2`}>
           <Trophy size={16} className="text-[#FFD400]"/>
           {title}
         </div>
-
       </div>
 
-      <div className="mt-12 space-y-4 text-xl  text-gray-300">
+      <div className="mt-12 space-y-4 text-xl text-gray-300">
 
         <div className="flex items-center gap-2 border-b border-gray-700 pb-2">
           <Camera size={16} className="text-[#FFD400]"/>
