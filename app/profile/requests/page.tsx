@@ -2,9 +2,17 @@
 
 import Image from "next/image";
 
-export default function RequestsPage() {
+type Request = {
+  id: number;
+  name: string;
+  role: string;
+  img: string;
+  text: string;
+  date: string;
+};
 
-  const requests = [
+export default function RequestsPage() {
+  const requests: Request[] = [
     {
       id: 1,
       name: "Ronald Richards",
@@ -37,6 +45,7 @@ export default function RequestsPage() {
         <h1 className="text-center text-yellow-400 text-3xl font-bold mb-10">
           Requests
         </h1>
+
         <div className="flex flex-col gap-8">
           {requests.map((req) => (
             <RequestCard key={req.id} req={req} />
@@ -47,15 +56,12 @@ export default function RequestsPage() {
   );
 }
 
-function RequestCard({ req }: { req: any }) {
+function RequestCard({ req }: { req: Request }) {
   return (
     <div className="border border-[#0d2a5f] bg-[#020d24] p-6 rounded-md">
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center gap-4">
-          <img
-            src={req.img}
-            className="w-12 h-12 rounded-full object-cover"
-          />
+          <img src={req.img} className="w-12 h-12 rounded-full object-cover" />
           <div>
             <h3 className="font-semibold">{req.name}</h3>
             <span className="text-yellow-400 text-sm">{req.role}</span>
@@ -70,12 +76,8 @@ function RequestCard({ req }: { req: any }) {
           </button>
         </div>
       </div>
-      <p className="text-gray-300 leading-relaxed mb-4">
-        {req.text}
-      </p>
-      <div className="text-right text-sm text-gray-400">
-        {req.date}
-      </div>
+      <p className="text-gray-300 leading-relaxed mb-4">{req.text}</p>
+      <div className="text-right text-sm text-gray-400">{req.date}</div>
     </div>
   );
 }
