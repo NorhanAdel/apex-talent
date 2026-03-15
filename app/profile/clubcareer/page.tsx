@@ -10,6 +10,7 @@ import {
   ImageIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+
 export default function ClubCareer() {
   const router = useRouter();
   const [step, setStep] = useState(3);
@@ -33,30 +34,29 @@ export default function ClubCareer() {
         Club Career
       </h1>
 
-      {/* Steps */}
+  
       <div className="flex items-center justify-center gap-6 mb-12">
 
         <Step icon={<User />} />
         <Line />
 
-        <Step  icon={<Trophy />} />
+        <Step icon={<Trophy />} />
         <Line />
 
         <Step active={step >= 3} icon={<DollarSign />} />
         <Line />
 
-        <Step  icon={<ImageIcon />} />
+        <Step icon={<ImageIcon />} />
 
       </div>
 
-      {/* Form */}
+   
       <div className="grid grid-cols-2 gap-6 w-full max-w-4xl mb-12">
 
         <div className="flex flex-col">
           <label className="text-gray-300 mb-2 font-semibold">
             Current Club
           </label>
-
           <select className="bg-[#0a0f2c] border border-[#1e2a5a] rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400">
             <option>Al Nassr FC</option>
             <option>Barcelona</option>
@@ -68,7 +68,6 @@ export default function ClubCareer() {
           <label className="text-gray-300 mb-2 font-semibold">
             Professional Debut
           </label>
-
           <select className="bg-[#0a0f2c] border border-[#1e2a5a] rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400">
             <option>2020</option>
             <option>2018</option>
@@ -80,7 +79,6 @@ export default function ClubCareer() {
           <label className="text-gray-300 mb-2 font-semibold">
             Previous Clubs
           </label>
-
           <select className="bg-[#0a0f2c] border border-[#1e2a5a] rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400">
             <option>
               Sporting CP, Manchester United, Real Madrid, Juventus
@@ -90,7 +88,7 @@ export default function ClubCareer() {
 
       </div>
 
-      {/* Buttons */}
+      
       <div className="flex justify-between w-full max-w-4xl">
 
         <button
@@ -102,7 +100,7 @@ export default function ClubCareer() {
         </button>
 
         <button
-       onClick={() => router.push("/football")}
+          onClick={() => router.push("/football")}
           className="flex items-center gap-2 bg-[#081f55] border-x border-yellow-400 px-8 py-3 rounded-lg hover:bg-[#0b2b6b] transition"
         >
           Next
@@ -115,8 +113,14 @@ export default function ClubCareer() {
   );
 }
 
-
-function Step({ icon, active }) {
+   
+function Step({
+  icon,
+  active = false
+}: {
+  icon: any;
+  active?: boolean;
+}) {
   return (
     <div
       className={`w-12 h-12 rounded-full flex items-center justify-center
@@ -126,7 +130,6 @@ function Step({ icon, active }) {
     </div>
   );
 }
-
 
 function Line() {
   return (
