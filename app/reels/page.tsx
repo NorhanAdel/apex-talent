@@ -31,21 +31,22 @@ const reelsData = [
 
 export default function ReelsPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [liked, setLiked] = useState({});
-  const [comments, setComments] = useState({});
-  const [openComments, setOpenComments] = useState(null);
+  const [liked, setLiked] = useState<Record<number, boolean>>({});
+  const [comments, setComments] = useState<Record<number, string[]>>({});
+  const [openComments, setOpenComments] = useState<number | null>(null);
   const [commentText, setCommentText] = useState("");
 
-  const videoRefs = useRef([]);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
-  const handleScroll = (e) => {
-    const scrollTop = e.target.scrollTop;
-    const height = e.target.clientHeight;
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    const scrollTop = target.scrollTop;
+    const height = target.clientHeight;
     const newIndex = Math.round(scrollTop / height);
     setCurrentIndex(newIndex);
   };
 
-  const toggleLike = (id) => {
+  const toggleLike = (id: number) => {
     const isLiked = liked[id];
 
     setLiked({ ...liked, [id]: !isLiked });
@@ -54,7 +55,7 @@ export default function ReelsPage() {
     else reelsData[id - 1].likes -= 1;
   };
 
-  const addComment = (id) => {
+  const addComment = (id: number) => {
     if (!commentText) return;
 
     const updated = comments[id]
@@ -67,16 +68,15 @@ export default function ReelsPage() {
 
   return (
     <div
-      className="h-screen overflow-y-scroll py-38 snap-mandatory bg-black"
+      className="h-screen overflow-y-scroll snap-y snap-mandatory bg-black"
       onScroll={handleScroll}
     >
       {reelsData.map((reel, index) => (
         <div
           key={reel.id}
-          className="relative h-screen mb-15 w-full max-w-[420px] mx-auto snap-start bg-black overflow-hidden"
+          className="relative h-screen w-full max-w-[420px] mx-auto snap-start bg-black overflow-hidden"
         >
-          
-         
+ 
           <video
             ref={(el) => (videoRefs.current[index] = el)}
             src={reel.video}
@@ -84,17 +84,18 @@ export default function ReelsPage() {
             autoPlay={currentIndex === index}
             muted
             loop
+            playsInline
           />
 
-       
+      
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/70"></div>
 
-        
+         
           <div className="absolute top-6 right-6 text-white z-20">
             <Camera size={26} />
           </div>
 
-          
+       
           <div className="absolute bottom-10 left-4 right-16 text-white z-20">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-9 h-9 rounded-full overflow-hidden border border-gray-300">
@@ -107,10 +108,9 @@ export default function ReelsPage() {
             <p className="text-sm opacity-90">{reel.description}</p>
           </div>
 
-     
+          
           <div className="absolute right-3 bottom-14 flex flex-col items-center gap-6 text-white z-20">
-            
-  
+          
             <div
               className="flex flex-col items-center cursor-pointer"
               onClick={() => toggleLike(reel.id)}
@@ -123,7 +123,7 @@ export default function ReelsPage() {
               <span className="text-xs">{reel.likes}</span>
             </div>
 
-       
+        
             <div
               className="flex flex-col items-center cursor-pointer"
               onClick={() => setOpenComments(reel.id)}
@@ -134,7 +134,7 @@ export default function ReelsPage() {
               </span>
             </div>
 
-         
+      
             <Send size={28} className="-rotate-12 cursor-pointer" />
 
             <MoreHorizontal size={28} />
@@ -149,23 +149,21 @@ export default function ReelsPage() {
               />
             </div>
           </div>
-
-      
-         <div
-  className={`absolute bottom-0 left-0 w-full z-30 transition-all duration-500 h-[50%] ${
-    openComments === reel.id
-      ? "translate-y-0 opacity-100"
-      : "translate-y-full opacity-0 pointer-events-none"
-  }`}
->
+ 
+          <div
+            className={`absolute bottom-0 left-0 w-full z-30 transition-all duration-500 h-[50%] ${
+              openComments === reel.id
+                ? "translate-y-0 opacity-100"
+                : "translate-y-full opacity-0 pointer-events-none"
+            }`}
+          >
             <div className="absolute inset-0 backdrop-blur-md bg-black/60 flex flex-col justify-end p-4">
-
            
               <div className="flex-1 overflow-y-auto mb-4 space-y-3">
                 {(comments[reel.id] || []).map((c, i) => (
                   <div
                     key={i}
-                    className="flex gap-2 items-start text-white animate-fadeIn"
+                    className="flex gap-2 items-start text-white"
                   >
                     <Image
                       src="/b3.jpg"
@@ -182,7 +180,7 @@ export default function ReelsPage() {
                 ))}
               </div>
 
-              
+             
               <div className="flex items-center gap-2">
                 <Image
                   src="/b3.jpg"
@@ -194,7 +192,9 @@ export default function ReelsPage() {
 
                 <input
                   value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setCommentText(e.target.value)
+                  }
                   placeholder="Add a comment..."
                   className="flex-1 bg-white/20 text-white placeholder-gray-300 px-3 py-2 rounded-full outline-none text-sm"
                 />
@@ -207,17 +207,15 @@ export default function ReelsPage() {
                 </button>
               </div>
 
-              {/* close */}
+      
               <button
                 className="text-white text-sm mt-3"
                 onClick={() => setOpenComments(null)}
               >
                 Close
               </button>
-
             </div>
           </div>
-
         </div>
       ))}
     </div>
