@@ -47,7 +47,7 @@ export default function ReelsPage() {
 
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
-  
+  // Scroll handler مع النوع الصح
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.currentTarget;
     const scrollTop = target.scrollTop;
